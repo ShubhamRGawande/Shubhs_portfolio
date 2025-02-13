@@ -11,10 +11,11 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import os
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -23,14 +24,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-)i4w2s*!u4_w5o!syk*s!1x8-1jlikx(cjt4z_3w+bwfgmp%!w'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = True  # Set to True for development
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['*']  # Allow all hosts during development
 
 # Application definition
-
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -55,7 +55,7 @@ ROOT_URLCONF = 'myportfolio.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / "templates"],  # EMPTY!
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -68,27 +68,29 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'myportfolio.wsgi.application'
 
+WSGI_APPLICATION = 'myportfolio.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'portfolio',
-        'USER': 'root',
-        'PASSWORD': 'root',
-        'HOST': 'localhost',  # Or your MySQL host
-        'PORT': '3306',
+        'NAME': 'portfolio',  # Your MySQL database name
+        'USER': 'root',       # Your MySQL username
+        'PASSWORD': 'root',   # Your MySQL password
+        'HOST': 'localhost',  # Your MySQL host
+        'PORT': '3306',       # Your MySQL port
     }
 }
 
+# If you want to use dj_database_url for environment variables, replace the above with:
+# DATABASES = {
+#     'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -104,26 +106,60 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
-
 STATIC_URL = 'static/'
-STATICFILES_DIRS = [BASE_DIR / 'portfolio/static']
+STATICFILES_DIRS = [BASE_DIR / 'portfolio/static']  # Ensure this path exists
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+JAZZMIN_SETTINGS = {
+    "site_title": "My Portfolio Admin",
+    "site_header": "Portfolio Admin",
+    "welcome_sign": "Welcome to My Portfolio Admin Panel",
+    "brand_logo": None,  # Add a path to your logo if needed
+    "copyright": "My Portfolio © 2024",
+    "search_model": "auth.User",
+    "topmenu_links": [
+        {"name": "Home", "url": "admin:index", "permissions": ["auth.view_user"]},
+        {"model": "auth.User"},
+    ],
+    "usermenu_links": [
+        {"name": "GitHub", "url": "https://github.com/", "new_window": True},
+    ],
+    "show_sidebar": True,
+    "navigation_expanded": True,
+    "icons": {
+        "auth": "fas fa-users-cog",
+        "auth.user": "fas fa-user",
+        "auth.Group": "fas fa-users",
+    },
+}
+
+JAZZMIN_UI_TWEAKS = {
+    "theme": "darkly",  # Choose a theme (e.g., darkly, flatly, cyborg)
+    "navbar": "navbar-dark bg-primary",  # Change navbar color
+    "body_small_text": True,
+    "footer_fixed": False,
+    "body_bg": "#1E1E1E",  # Change background color to dark gray
+    "accent": "primary",
+    "brand_color": "primary",
+    "button_classes": {
+        "primary": "btn-primary",
+        "secondary": "btn-secondary",
+        "info": "btn-info",
+        "warning": "btn-warning",
+        "danger": "btn-danger",
+        "success": "btn-success"
+    },
+}
+
